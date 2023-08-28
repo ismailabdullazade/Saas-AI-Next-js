@@ -1,8 +1,9 @@
-import React from 'react'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard Protected</div>
+    <div>Dashboard Protected
+
+    </div>
   )
 }
 
