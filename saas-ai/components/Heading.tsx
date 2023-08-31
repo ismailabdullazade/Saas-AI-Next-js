@@ -4,11 +4,7 @@ import { LucideIcon } from "lucide-react";
 interface HeadingProps {
     title:string;
     description:string;
-<<<<<<< HEAD
-    icon: LucideIcon;
-=======
     icon:LucideIcon;
->>>>>>> af376d95a9e9f4d073d01c649fe7436b3012c701
     iconColor?:string;
     bgColor?:string;
 }
@@ -27,8 +23,4 @@ const Heading = ({title,description,icon:Icon,iconColor,bgColor}:HeadingProps) =
     )
 }
 
-<<<<<<< HEAD
-export default Heading
-=======
 export default Heading;
->>>>>>> af376d95a9e9f4d073d01c649fe7436b3012c701
