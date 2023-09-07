@@ -7,28 +7,29 @@ import Heading from '@/components/Heading'
 import { ImageIcon, MessageSquare } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { formSchema } from './constants'
+import { amountOptions, formSchema } from './constants'
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import {ChatCompletionRequestMessage} from "openai"
 import axios from "axios"
 import { Empty } from "@/components/Empty"
 import { Loader } from "@/components/Loader"
 import { UserAvatar } from "@/components/user-avatar"
 import { BotAvatar } from "@/components/Bot-Avatar"
+import { SelectValue, Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"
 
 const ImagePage = () => {
 
   const router = useRouter();
-
-  const [messages,setMessages] = useState<ChatCompletionRequestMessage[]>([])
+  const [images,setImages] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
       resolver:zodResolver(formSchema),
       defaultValues:{
-          prompt:""
+          prompt:"",
+          amount:"1",
+          resolution:"512x512"
       }
   })
 
@@ -36,21 +37,15 @@ const ImagePage = () => {
 
   const onSubmit = async (values:z.infer<typeof formSchema>)=>{
     try {
-      //this is user text
-      const userMessage:ChatCompletionRequestMessage = {
-        role:"user",
-        content:values.prompt,
-      }
+      setImages([]);
       
-      const newMessages = [...messages,userMessage];
+      const response = await axios.post("api/conversation",values);
 
-      const response = await axios.post("api/conversation",{
-        messages:newMessages
-      })
+      const urls = response.data.map((image:{url:string})=>image.url);
 
-      setMessages(current=>[...current,userMessage,response.data])
+      setImages(urls);
+
       form.reset()
-
 
     } catch (error:any) {
       //TODO: Open Pro Modal
@@ -84,13 +79,44 @@ const ImagePage = () => {
                   <FormControl className="m-0 p-0">
                     <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                     disabled={isLoading}
-                    placeholder="Ask question ... ?"
+                    placeholder="A picture of a horse in Swiss Alps ?"
                     {...field}
                     />
                   </FormControl>
                 </FormItem>
-
               )}
+              />
+
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({field})=>(
+                  <FormItem className="col-span-12 lg:col-span-2">
+                    <Select
+                    disabled={isLoading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue defaultValue={field.value}/>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {amountOptions.map(option=>(
+                          <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          >
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+
+                    </Select>
+                  </FormItem>
+                )}
               />
 
               <Button disabled={isLoading} className="col-span-12 lg:col-span-2 w-full">
@@ -103,28 +129,16 @@ const ImagePage = () => {
         </div>
         <div className="space-y-4 mt-4">
           {isLoading && (
-            <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+            <div className="p-20">
               <Loader/>
 
             </div>
           )}
-          {messages.length === 0 && !isLoading && (
-            <Empty label="No conversation started."/>
+          {images.length === 0 && !isLoading && (
+            <Empty label="No images generated."/>
           )}
-          <div className="flex flex-col-reverse gap-y-4">
-            {messages.map(message=>(
-              <div key={message.content}
-              className={cn(
-                "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                message.role === "user"? "bg-white border border-black/10":"bg-muted"
-              )}>
-                {message.role === "user" ? <UserAvatar/> : <BotAvatar/>}
-                <p className="text-sm">
-                {message.content}
-                </p>
-              </div>
-            ))}
-
+          <div>
+            Images will rendered here
           </div>
         </div>
       </div>
