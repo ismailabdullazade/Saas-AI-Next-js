@@ -4,7 +4,7 @@ import * as z from "zod"
 import { cn } from "@/lib/utils"
 import {zodResolver} from "@hookform/resolvers/zod"
 import Heading from '@/components/Heading'
-import { Code } from 'lucide-react'
+import { ImageIcon, MessageSquare } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { formSchema } from './constants'
@@ -18,9 +18,8 @@ import { Empty } from "@/components/Empty"
 import { Loader } from "@/components/Loader"
 import { UserAvatar } from "@/components/user-avatar"
 import { BotAvatar } from "@/components/Bot-Avatar"
-import { ReactMarkdown } from "react-markdown/lib/react-markdown"
 
-const CodePage = () => {
+const ImagePage = () => {
 
   const router = useRouter();
 
@@ -45,7 +44,7 @@ const CodePage = () => {
       
       const newMessages = [...messages,userMessage];
 
-      const response = await axios.post("api/code",{
+      const response = await axios.post("api/conversation",{
         messages:newMessages
       })
 
@@ -64,7 +63,12 @@ const CodePage = () => {
 
   return (
     <div>
-      <Heading title="Code Generation" description='Generate code using descriptive text.' icon={Code} iconColor='text-green-700' bgColor='bg-green-700/10' />
+      <Heading 
+      title="Image Generation" 
+      description='Turn your prompt into an image.' 
+      icon={ImageIcon} 
+      iconColor='text-pink-700' 
+      bgColor='bg-pink-700/10' />
 
       <div className="px-4 lg:px-8">
         <div>
@@ -80,7 +84,7 @@ const CodePage = () => {
                   <FormControl className="m-0 p-0">
                     <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                     disabled={isLoading}
-                    placeholder="Simple toggle button using react hooks."
+                    placeholder="Ask question ... ?"
                     {...field}
                     />
                   </FormControl>
@@ -115,21 +119,9 @@ const CodePage = () => {
                 message.role === "user"? "bg-white border border-black/10":"bg-muted"
               )}>
                 {message.role === "user" ? <UserAvatar/> : <BotAvatar/>}
-                <ReactMarkdown
-                    components={{
-                        pre:({node, ...props})=>(
-                            <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
-                                <pre {...props} />
-                            </div>
-                        ),
-                        code:({node,...props})=>(
-                            <code className="bg-black/10 rounded-lg p-1"{...props}/>
-                        )
-                    }}
-                    className="text-sm overflow-hidden leading-7"
-                >
-                    {message.content || ""}
-                </ReactMarkdown>
+                <p className="text-sm">
+                {message.content}
+                </p>
               </div>
             ))}
 
@@ -143,4 +135,4 @@ const CodePage = () => {
   )
 }
 
-export default CodePage
+export default ImagePage
