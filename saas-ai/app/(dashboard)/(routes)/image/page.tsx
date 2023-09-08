@@ -4,10 +4,10 @@ import * as z from "zod"
 import { cn } from "@/lib/utils"
 import {zodResolver} from "@hookform/resolvers/zod"
 import Heading from '@/components/Heading'
-import { ImageIcon, MessageSquare } from 'lucide-react'
+import { Download, ImageIcon, MessageSquare } from 'lucide-react'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { amountOptions, formSchema } from './constants'
+import { amountOptions, formSchema, resolutionOptions } from './constants'
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,6 +18,8 @@ import { Loader } from "@/components/Loader"
 import { UserAvatar } from "@/components/user-avatar"
 import { BotAvatar } from "@/components/Bot-Avatar"
 import { SelectValue, Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"
+import { Card, CardFooter } from "@/components/ui/card"
+import Image from "next/image"
 
 const ImagePage = () => {
 
@@ -39,7 +41,7 @@ const ImagePage = () => {
     try {
       setImages([]);
       
-      const response = await axios.post("api/conversation",values);
+      const response = await axios.post("api/image",values);
 
       const urls = response.data.map((image:{url:string})=>image.url);
 
@@ -75,7 +77,7 @@ const ImagePage = () => {
               name="prompt"
               render={({field})=>(
 
-                <FormItem className="col-span-12 lg:col-span-10">
+                <FormItem className="col-span-12 lg:col-span-6">
                   <FormControl className="m-0 p-0">
                     <Input className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                     disabled={isLoading}
@@ -118,7 +120,38 @@ const ImagePage = () => {
                   </FormItem>
                 )}
               />
+              
+              <FormField
+                control={form.control}
+                name="resolution"
+                render={({field})=>(
+                  <FormItem className="col-span-12 lg:col-span-2">
+                    <Select
+                    disabled={isLoading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue defaultValue={field.value}/>
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {resolutionOptions.map(option=>(
+                          <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          >
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
 
+                    </Select>
+                  </FormItem>
+                )}
+              />
               <Button disabled={isLoading} className="col-span-12 lg:col-span-2 w-full">
                 Generate
               </Button>
@@ -137,8 +170,29 @@ const ImagePage = () => {
           {images.length === 0 && !isLoading && (
             <Empty label="No images generated."/>
           )}
-          <div>
-            Images will rendered here
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+            {images.map(src=>(
+              <Card key={src} 
+              className="rounded-lg overflow-hidden">
+                <div className="relative aspect-square">
+                  <Image
+                  alt="Image"
+                  fill
+                  src={src}
+                  />
+                </div>
+                <CardFooter className="p-2">
+                  <Button 
+                  onClick={()=>window.open(src)}
+                  variant="secondary" 
+                  className="w-full">
+                    <Download className="h-4 w-4 mr-2"/>
+                    Download
+                  </Button>
+
+                </CardFooter>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
