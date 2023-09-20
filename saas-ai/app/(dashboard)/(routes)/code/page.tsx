@@ -19,8 +19,10 @@ import { Loader } from "@/components/Loader"
 import { UserAvatar } from "@/components/user-avatar"
 import { BotAvatar } from "@/components/Bot-Avatar"
 import { ReactMarkdown } from "react-markdown/lib/react-markdown"
+import { useProModal } from "@/hooks/use-pro-modal"
 
 const CodePage = () => {
+  const proModal = useProModal();
 
   const router = useRouter();
 
@@ -54,8 +56,9 @@ const CodePage = () => {
 
 
     } catch (error:any) {
-      //TODO: Open Pro Modal
-      console.log(error);
+      if(error?.response?.status === 403){
+        proModal.onOpen();
+      }
     }finally{
       router.refresh();
     }
