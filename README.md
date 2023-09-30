@@ -1,39 +1,39 @@
 # Saas-AI Platform with Next js 13
 
-* Features:
+Features:
 
-Tailwind design
+* Tailwind design
 
-Tailwind animations and effects
+* Tailwind animations and effects
 
-Full responsiveness
+* Full responsiveness
 
-Clerk Authentication (Email, Google, 9+ Social Logins)
+* Clerk Authentication (Email, Google, 9+ Social Logins)
 
-Client form validation and handling using react-hook-form
+* Client form validation and handling using react-hook-form
 
-Server error handling using react-toast
+* Server error handling using react-toast
 
-Image Generation Tool (Open AI)
+* Image Generation Tool (Open AI)
 
-Video Generation Tool (Replicate AI)
+* Video Generation Tool (Replicate AI)
 
-Conversation Generation Tool (Open AI)
+* Conversation Generation Tool (Open AI)
 
-Music Generation Tool (Replicate AI)
+* Music Generation Tool (Replicate AI)
 
-Page loading state
+* Page loading state
 
-Stripe monthly subscription
+* Stripe monthly subscription
 
-Free tier with API limiting
+* Free tier with API limiting
 
-How to write POST, DELETE, and GET routes in route handlers (app/api)
+* How to write POST, DELETE, and GET routes in route handlers (app/api)
 
-How to fetch data in server react components by directly accessing database (WITHOUT API! like Magic!)
+* How to fetch data in server react components by directly accessing database (WITHOUT API! like Magic!)
 
-How to handle relations between Server and Child components!
+* How to handle relations between Server and Child components!
 
-How to reuse layouts
+* How to reuse layouts
 
-Folder structure in Next 13 App Router
+* Folder structure in Next 13 App Router
