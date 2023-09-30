@@ -1,6 +1,6 @@
 # Saas-AI Platform with Next js 13
 
-Features:
+*Features:
 
 Tailwind design
 
